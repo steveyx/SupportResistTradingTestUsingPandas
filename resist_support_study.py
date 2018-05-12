@@ -2,7 +2,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import pandas_datareader.data as web
+#import pandas_datareader.data as web
+import quandl
 import datetime as dt
 import os
 from   matplotlib.finance import candlestick_ohlc
@@ -46,7 +47,9 @@ def loadData(symbol):
     filename = symbol + start+'_' + end+'.csv'
     loc = 'data\\'+ filename
     if not os.path.exists(loc):
-        data  = web.DataReader(symbol, 'google', start, end)
+#        data  = web.DataReader(symbol, 'google', start, end)
+        data = quandl.get("WIKI/"+symbol, start_date=start, end_date=end)
+        #[['Adj. Close']].rename(columns={'Adj. Close':stk})
         data.to_csv(loc)
     else:
         data =  pd.read_csv(loc,header=0, index_col='Date',parse_dates=['Date'])
@@ -152,9 +155,9 @@ def tradePerformance(data):
 
     
 if __name__ == "__main__":
-    symbol_list = ["AAPL","IBM","YHOO", "STX", "MSFT", "GOOGL", "HP" , "FB"]
-    symbol_list = ["ADM", "T", "AVY", "BAX", "BLK", "BA", "BSX", "COG"]
     symbol_list = ["CELG", "CF", "CI", "CSCO", "C", "KO", "DAL", "EFX"]
+    symbol_list = ["ADM", "T", "AVY", "BAX", "BLK", "BA", "BSX", "COG"]
+    symbol_list = ["AAPL","IBM","YHOO", "STX", "MSFT", "GOOGL", "HP" , "FB"]
     symbol_list = ["EQR", "ACN", "EBAY", "AVGO", "MMM", "ADBE", "AIG", "AON"]
     TradeResults = pd.DataFrame(columns = ['Symbol','TotalTrades','Win','Lose','WinPnt(%)','Balance(%)'])
     for sym in symbol_list:
